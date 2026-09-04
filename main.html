@@ -192,11 +192,7 @@
     </div>
 
     <script>
-        // ==========================================
-        // 🚨 YOUR APPS SCRIPT URL GOES HERE 🚨
-        // ==========================================
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzN6cIeB4yWaA-egdLRa-4bZVrAl3M2ZxAIhvk9DNqYZcAuPAxk8Dz9J30laKPAZfiq/exec";
-        // ==========================================
 
         const screen1 = document.getElementById('screen1');
         const screen2 = document.getElementById('screen2');
@@ -217,7 +213,7 @@
             reasonsBox.style.display = 'block'; 
         });
 
-        // --- SENDING DATA TO GOOGLE SHEETS ---
+        // --- SENDING DATA TO GOOGLE SHEETS (BULLETPROOF METHOD) ---
         yesBtn.addEventListener('click', () => {
             // UI Updates instantly
             questionText.style.display = 'none';
@@ -228,17 +224,13 @@
             screen2.style.left = '50%';
             screen2.style.top = '50%';
 
-            // Send to Google Sheets silently in the background
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors', // Bypasses browser security blocks for background posts
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: "She said YES! 🎉",
-                    attempts: noAttemptCount
-                })
+            // We append the attempts directly to the end of the URL
+            const finalUrl = SCRIPT_URL + "?attempts=" + noAttemptCount;
+
+            // Send using a GET request (Browsers do not block this)
+            fetch(finalUrl, {
+                method: 'GET',
+                mode: 'no-cors'
             }).then(() => {
                 console.log("Logged to Google Sheets successfully!");
             }).catch(error => {
