@@ -147,6 +147,20 @@
             font-size: 24px;
             font-weight: 800;
         }
+        
+        .sub-text {
+            display: block;
+            font-size: 16px;
+            color: #ff4081;
+            margin-top: 15px;
+        }
+        
+        .score-text {
+            display: block;
+            font-size: 14px;
+            color: #ff80ab;
+            margin-top: 5px;
+        }
 
         @media (max-width: 400px) {
             .reasons-box {
@@ -188,12 +202,15 @@
             <button id="yesBtn">yes</button>
             <button id="noBtn">no</button>
         </div>
-        <div id="successMessage">Yay! You just made me the happiest person!</div>
+        
+        <div id="successMessage">
+            Yay! You just made me the happiest person!
+            <span class="sub-text">Take a screenshot and send it to me! 📸</span>
+            <span class="score-text">(Your 'No' dodge score: <span id="finalScore">0</span>)</span>
+        </div>
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzN6cIeB4yWaA-egdLRa-4bZVrAl3M2ZxAIhvk9DNqYZcAuPAxk8Dz9J30laKPAZfiq/exec";
-
         const screen1 = document.getElementById('screen1');
         const screen2 = document.getElementById('screen2');
         const okayBtn = document.getElementById('okayBtn');
@@ -204,6 +221,7 @@
         const successMessage = document.getElementById('successMessage');
         const reasonsBox = document.getElementById('reasonsBox');
         const dodgeCounter = document.getElementById('dodgeCounter');
+        const finalScore = document.getElementById('finalScore');
 
         let noAttemptCount = 0;
 
@@ -213,29 +231,22 @@
             reasonsBox.style.display = 'block'; 
         });
 
-        // --- SENDING DATA TO GOOGLE SHEETS (BULLETPROOF METHOD) ---
+        // --- PURE STATIC LOGIC ---
         yesBtn.addEventListener('click', () => {
-            // UI Updates instantly
+            // Hide the question and buttons
             questionText.style.display = 'none';
             yesNoButtons.style.display = 'none';
+            
+            // Inject her final score into the success message!
+            finalScore.textContent = noAttemptCount;
+            
+            // Show the success message
             successMessage.style.display = 'block';
             
+            // Re-center the dialogue box
             screen2.style.transform = 'translate(-50%, -50%)';
             screen2.style.left = '50%';
             screen2.style.top = '50%';
-
-            // We append the attempts directly to the end of the URL
-            const finalUrl = SCRIPT_URL + "?attempts=" + noAttemptCount;
-
-            // Send using a GET request (Browsers do not block this)
-            fetch(finalUrl, {
-                method: 'GET',
-                mode: 'no-cors'
-            }).then(() => {
-                console.log("Logged to Google Sheets successfully!");
-            }).catch(error => {
-                console.error("Error logging to Sheets:", error);
-            });
         });
 
         const moveDialogueBox = (e) => {
@@ -259,6 +270,7 @@
             screen2.style.top = randomY + 'px';
         };
 
+        // Triggers 
         noBtn.addEventListener('mouseenter', moveDialogueBox);
         noBtn.addEventListener('touchstart', moveDialogueBox, { passive: false });
         noBtn.addEventListener('click', moveDialogueBox);
