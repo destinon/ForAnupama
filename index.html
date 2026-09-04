@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Anupama</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #ffe6ea 0%, #ffb3c6 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden; 
+        }
+
+        /* Top Left Reasons Box */
+        .reasons-box {
+            display: none; 
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 12px 15px;
+            border-radius: 12px;
+            text-align: left;
+            color: #d81b60;
+            box-shadow: 0 4px 15px rgba(255, 105, 135, 0.15);
+            z-index: 1000;
+            pointer-events: none; 
+        }
+
+        .reasons-box h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: lowercase;
+            letter-spacing: 0.5px;
+        }
+
+        .reasons-box ul {
+            list-style: none;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .reasons-box li {
+            margin-bottom: 5px;
+        }
+
+        .reasons-box li::before {
+            content: "♡ ";
+            color: #ff4081;
+        }
+
+        /* LIVE COUNTER (Bottom Right) */
+        #dodgeCounter {
+            position: fixed;
+            bottom: 10px;
+            right: 15px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #d81b60;
+            opacity: 0.5;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        /* Main Dialogue Containers */
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 40px 20px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 105, 135, 0.2);
+            width: 90%;
+            max-width: 350px;
+        }
+
+        h1 {
+            color: #d81b60;
+            font-size: 24px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
+            transition: transform 0.2s, background-color 0.2s;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        button:hover {
+            background-color: #f50057;
+            transform: scale(1.05);
+        }
+
+        #noBtn {
+            background-color: #ff80ab; 
+        }
+
+        #screen1 {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #screen2 {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: left 0.25s ease-out, top 0.25s ease-out; 
+            z-index: 500;
+        }
+
+        #successMessage {
+            display: none;
+            color: #d81b60;
+            font-size: 24px;
+            font-weight: 800;
+        }
+        
+        .sub-text {
+            display: block;
+            font-size: 16px;
+            color: #ff4081;
+            margin-top: 15px;
+        }
+        
+        .score-text {
+            display: block;
+            font-size: 14px;
+            color: #ff80ab;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 400px) {
+            .reasons-box {
+                top: 10px;
+                left: 10px;
+                padding: 10px;
+            }
+            .reasons-box h3 {
+                font-size: 12px;
+            }
+            .reasons-box ul {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reasons-box" id="reasonsBox">
+        <h3>reasons i should be<br>your boyfriend:</h3>
+        <ul>
+            <li>certified spider catcher</li>
+            <li>will gladly share my fries</li>
+            <li>my text reply game is 10/10</li>
+            <li>i let you win arguments (sometimes)</li>
+        </ul>
+    </div>
+
+    <div id="dodgeCounter"></div>
+
+    <div class="container" id="screen1">
+        <h1>Hi Anupama!<br><br>I wanna ask you a question...</h1>
+        <button id="okayBtn">okay ask</button>
+    </div>
+
+    <div class="container" id="screen2">
+        <h1 id="questionText">can i be your boyfriend?</h1>
+        <div class="button-group" id="yesNoButtons">
+            <button id="yesBtn">yes</button>
+            <button id="noBtn">no</button>
+        </div>
+        
+        <div id="successMessage">
+            Yay! You just made me the happiest person!
+            <span class="sub-text">Take a screenshot and send it to me! 📸</span>
+            <span class="score-text">(Your 'No' dodge score: <span id="finalScore">0</span>)</span>
+        </div>
+    </div>
+
+    <script>
+        const screen1 = document.getElementById('screen1');
+        const screen2 = document.getElementById('screen2');
+        const okayBtn = document.getElementById('okayBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const questionText = document.getElementById('questionText');
+        const yesNoButtons = document.getElementById('yesNoButtons');
+        const successMessage = document.getElementById('successMessage');
+        const reasonsBox = document.getElementById('reasonsBox');
+        const dodgeCounter = document.getElementById('dodgeCounter');
+        const finalScore = document.getElementById('finalScore');
+
+        let noAttemptCount = 0;
+
+        okayBtn.addEventListener('click', () => {
+            screen1.style.display = 'none';
+            screen2.style.display = 'block';
+            reasonsBox.style.display = 'block'; 
+        });
+
+        // --- PURE STATIC LOGIC ---
+        yesBtn.addEventListener('click', () => {
+            // Hide the question and buttons
+            questionText.style.display = 'none';
+            yesNoButtons.style.display = 'none';
+            
+            // Inject her final score into the success message!
+            finalScore.textContent = noAttemptCount;
+            
+            // Show the success message
+            successMessage.style.display = 'block';
+            
+            // Re-center the dialogue box
+            screen2.style.transform = 'translate(-50%, -50%)';
+            screen2.style.left = '50%';
+            screen2.style.top = '50%';
+        });
+
+        const moveDialogueBox = (e) => {
+            if (e) e.preventDefault(); 
+            
+            noAttemptCount++;
+            dodgeCounter.textContent = `Attempts to say no: ${noAttemptCount}`;
+            
+            screen2.style.transform = 'none';
+            
+            const boxWidth = screen2.offsetWidth;
+            const boxHeight = screen2.offsetHeight;
+            
+            const safeWidth = window.innerWidth - boxWidth - 20;
+            const safeHeight = window.innerHeight - boxHeight - 20;
+            
+            const randomX = Math.max(10, Math.floor(Math.random() * safeWidth));
+            const randomY = Math.max(10, Math.floor(Math.random() * safeHeight));
+            
+            screen2.style.left = randomX + 'px';
+            screen2.style.top = randomY + 'px';
+        };
+
+        // Triggers 
+        noBtn.addEventListener('mouseenter', moveDialogueBox);
+        noBtn.addEventListener('touchstart', moveDialogueBox, { passive: false });
+        noBtn.addEventListener('click', moveDialogueBox);
+    </script>
+</body>
+</html>
