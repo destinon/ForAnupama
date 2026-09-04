@@ -63,7 +63,7 @@
             text-align: left;
             color: #d81b60;
             box-shadow: 0 4px 15px rgba(255, 105, 135, 0.15);
-            z-index: 1000;
+            z-index: 100; /* Lowered z-index so it stays in the back */
             pointer-events: none; 
         }
 
@@ -98,7 +98,7 @@
             font-weight: 800;
             color: #d81b60;
             opacity: 0.5;
-            z-index: 1000;
+            z-index: 100;
             pointer-events: none;
         }
 
@@ -111,7 +111,7 @@
             box-shadow: 0 10px 30px rgba(255, 105, 135, 0.2);
             width: 90%;
             max-width: 350px;
-            z-index: 10; 
+            z-index: 9999; /* Boosted so it always stays on top of everything! */
         }
 
         h1 {
@@ -178,6 +178,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            z-index: 9999;
         }
 
         #screen2 {
@@ -187,7 +188,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             transition: left 0.25s ease-out, top 0.25s ease-out; 
-            z-index: 500;
+            z-index: 9999; /* Boosted z-index here too */
         }
 
         #successMessage {
