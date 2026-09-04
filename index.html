@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For Anupama</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -22,7 +22,33 @@
             align-items: center;
             text-align: center;
             overflow: hidden; 
+            position: relative;
         }
+
+        /* Floating Background Bubbles */
+        .bg-bubbles {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-120vh) scale(1.5); opacity: 0; }
+        }
+        .b1 { width: 40px; height: 40px; left: 10%; animation-duration: 8s; animation-delay: 0s; }
+        .b2 { width: 20px; height: 20px; left: 30%; animation-duration: 5s; animation-delay: 2s; }
+        .b3 { width: 50px; height: 50px; left: 60%; animation-duration: 10s; animation-delay: 1s; }
+        .b4 { width: 30px; height: 30px; left: 80%; animation-duration: 7s; animation-delay: 3s; }
+        .b5 { width: 25px; height: 25px; left: 45%; animation-duration: 6s; animation-delay: 4s; }
 
         /* Top Left Reasons Box */
         .reasons-box {
@@ -59,7 +85,7 @@
         }
 
         .reasons-box li::before {
-            content: "♡ ";
+            content: "<3 ";
             color: #ff4081;
         }
 
@@ -85,11 +111,20 @@
             box-shadow: 0 10px 30px rgba(255, 105, 135, 0.2);
             width: 90%;
             max-width: 350px;
+            z-index: 10; 
         }
 
         h1 {
             color: #d81b60;
-            font-size: 24px;
+            font-size: 26px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .confession-text {
+            color: #e91e63;
+            font-size: 16px;
+            font-weight: 700;
             margin-bottom: 20px;
             line-height: 1.4;
         }
@@ -115,13 +150,27 @@
             font-family: 'Nunito', sans-serif;
         }
 
+        /* Heartbeat animation for the YES button */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        #yesBtn {
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
         button:hover {
             background-color: #f50057;
-            transform: scale(1.05);
+        }
+        #yesBtn:hover {
+            transform: scale(1.15); 
         }
 
         #noBtn {
             background-color: #ff80ab; 
+            min-width: 80px; 
         }
 
         #screen1 {
@@ -179,6 +228,14 @@
 </head>
 <body>
 
+    <div class="bg-bubbles">
+        <div class="bubble b1"></div>
+        <div class="bubble b2"></div>
+        <div class="bubble b3"></div>
+        <div class="bubble b4"></div>
+        <div class="bubble b5"></div>
+    </div>
+
     <div class="reasons-box" id="reasonsBox">
         <h3>reasons i should be<br>your boyfriend:</h3>
         <ul>
@@ -197,7 +254,8 @@
     </div>
 
     <div class="container" id="screen2">
-        <h1 id="questionText">can i be your boyfriend?</h1>
+        <p class="confession-text" id="confessionText">i've had a crush on you since 12th grade but i was always too nervous to ask...</p>
+        <h1 id="questionText">so... can i be your boyfriend?</h1>
         <div class="button-group" id="yesNoButtons">
             <button id="yesBtn">yes</button>
             <button id="noBtn">no</button>
@@ -205,7 +263,7 @@
         
         <div id="successMessage">
             Yay! You just made me the happiest person!
-            <span class="sub-text">Take a screenshot and send it to me! 📸</span>
+            <span class="sub-text">Take a screenshot and send it to me!</span>
             <span class="score-text">(Your 'No' dodge score: <span id="finalScore">0</span>)</span>
         </div>
     </div>
@@ -216,6 +274,7 @@
         const okayBtn = document.getElementById('okayBtn');
         const yesBtn = document.getElementById('yesBtn');
         const noBtn = document.getElementById('noBtn');
+        const confessionText = document.getElementById('confessionText');
         const questionText = document.getElementById('questionText');
         const yesNoButtons = document.getElementById('yesNoButtons');
         const successMessage = document.getElementById('successMessage');
@@ -225,25 +284,36 @@
 
         let noAttemptCount = 0;
 
+        // Funny text phrases for the "No" button
+        const noPhrases = [
+            "no", 
+            "nope", 
+            "too slow!", 
+            "try again", 
+            "missed me", 
+            "nice try", 
+            "still no", 
+            "catch me!", 
+            "give up!"
+        ];
+
         okayBtn.addEventListener('click', () => {
             screen1.style.display = 'none';
             screen2.style.display = 'block';
             reasonsBox.style.display = 'block'; 
         });
 
-        // --- PURE STATIC LOGIC ---
         yesBtn.addEventListener('click', () => {
-            // Hide the question and buttons
+            // Hide the confession text and the question when she says yes
+            confessionText.style.display = 'none';
             questionText.style.display = 'none';
             yesNoButtons.style.display = 'none';
             
-            // Inject her final score into the success message!
+            // Show the success message and score
             finalScore.textContent = noAttemptCount;
-            
-            // Show the success message
             successMessage.style.display = 'block';
             
-            // Re-center the dialogue box
+            // Re-center
             screen2.style.transform = 'translate(-50%, -50%)';
             screen2.style.left = '50%';
             screen2.style.top = '50%';
@@ -254,6 +324,10 @@
             
             noAttemptCount++;
             dodgeCounter.textContent = `Attempts to say no: ${noAttemptCount}`;
+
+            // Change the button text based on how many times she tried!
+            let phraseIndex = Math.min(noAttemptCount, noPhrases.length - 1);
+            noBtn.textContent = noPhrases[phraseIndex];
             
             screen2.style.transform = 'none';
             
